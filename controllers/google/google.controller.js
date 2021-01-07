@@ -47,23 +47,23 @@ function authorize(credentials, callback) {
 function getNewToken(oauth2Client, callback) {
     var authUrl = oauth2Client.generateAuthUrl({ access_type: 'offline', scope: SCOPES });
     console.log('Authorize this app by visiting this url: ', authUrl);
-    var rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-    });
+    // var rl = readline.createInterface({
+    //     input: process.stdin,
+    //     output: process.stdout
+    // });
 
-    rl.question('Enter the code from that page here: ', function (code) {
-        rl.close();
-        oauth2Client.getToken(code, function (err, token) {
-            if (err) {
-                console.log('Error while trying to retrieve access token', err);
-                return;
-            }
-            oauth2Client.credentials = token;
-            storeToken(token);
-            callback(oauth2Client);
-        });
-    });
+    // rl.question('Enter the code from that page here: ', function (code) {
+    //     rl.close();
+    //     oauth2Client.getToken(code, function (err, token) {
+    //         if (err) {
+    //             console.log('Error while trying to retrieve access token', err);
+    //             return;
+    //         }
+    //         oauth2Client.credentials = token;
+    //         storeToken(token);
+    //         callback(oauth2Client);
+    //     });
+    // });
 }
 
 /**
@@ -109,6 +109,10 @@ function listLabels(auth) {
     });
 }
 
+exports.test = async(req, res) => {
+    console.log('start');
+}
+
 exports.GetGoogle = async (req, res) => {
     await fs.readFile('credentials.json', function processClientSecrets(err, content) {
         if (err) {
@@ -118,5 +122,25 @@ exports.GetGoogle = async (req, res) => {
         // Authorize a client with the loaded credentials, then call the
         // Gmail API.
         authorize(JSON.parse(content), listLabels);
+    });
+}
+
+exports.GetGoogleCode = async (req, res) => {
+     var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+    });
+
+    rl.question('Enter the code from that page here: ', function (code) {
+        rl.close();
+        oauth2Client.getToken(code, function (err, token) {
+            if (err) {
+                console.log('Error while trying to retrieve access token', err);
+                return;
+            }
+            oauth2Client.credentials = token;
+            storeToken(token);
+            callback(oauth2Client);
+        });
     });
 }
